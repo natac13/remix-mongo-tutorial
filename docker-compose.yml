@@ -1,0 +1,60 @@
+version: '2.4'
+
+services:
+  mongo1:
+    image: mongo:4.4.0-bionic
+    volumes:
+      - mongoDB:/data/db
+    restart: on-failure
+    command: --bind_ip_all --replSet rs1
+    ports:
+      - 27017:27017
+  mongo2:
+    image: mongo:4.4.0-bionic
+    volumes:
+      - mongoDB2:/data/db
+    restart: on-failure
+    command: --bind_ip_all --replSet rs1
+    ports:
+      - 27018:27017
+  mongo3:
+    image: mongo:4.4.0-bionic
+    volumes:
+      - mongoDB3:/data/db
+    restart: on-failure
+    command: --bind_ip_all --replSet rs1
+    ports:
+      - 27019:27017
+  mongosetup:
+    image: mongo:4.4.0-bionic
+    restart: on-failure
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    volumes:
+      - ./docker/dbsetup.sh:/scripts/dbsetup.sh
+    entrypoint: [ '/scripts/dbsetup.sh' ]
+  # sqs:
+  #   image: softwaremill/elasticmq:0.15.7
+  #   restart: on-failure
+  #   ports:
+  #     - 9324:9324
+  #   networks:
+  #     - frontend
+  # sqsInit:
+  #   image: amazon/aws-cli:2.0.50
+  #   networks:
+  #     - frontend
+  #   depends_on:
+  #     - sqs
+  #   environment:
+  #     SQS_ENDPOINT: http://sqs:9324
+  #   volumes:
+  #     - '~/.aws:/root/.aws'
+  #     - './docker/sqs-init.sh:/scripts/sqs-init.sh'
+  #   entrypoint: ['/scripts/sqs-init.sh']
+volumes:
+  mongoDB:
+  mongoDB2:
+  mongoDB3:

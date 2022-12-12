@@ -164,3 +164,18 @@ export async function createUserSession(userId: string, redirectTo: string) {
     },
   })
 }
+
+export async function getOtherUsers(userId: string) {
+  const users = await prisma.user.findMany({
+    select: { id: true, email: true, profile: true },
+    where: {
+      id: { not: userId },
+    },
+    orderBy: {
+      profile: {
+        firstName: 'asc',
+      },
+    },
+  })
+  return users
+}

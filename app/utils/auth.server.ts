@@ -179,3 +179,11 @@ export async function getOtherUsers(userId: string) {
   })
   return users
 }
+
+export async function getUserById(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    // select: { id: true, email: true, profile: true },
+  })
+  return user
+}

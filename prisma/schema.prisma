@@ -17,9 +17,39 @@ model User {
   profile   Profile
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  kudoSent  Kudo[]   @relation("KudoSent")
+  kudos     Kudo[]   @relation("KudoReceived")
 }
 
 type Profile {
   firstName String
   lastName  String
+}
+
+model Kudo {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  author    User     @relation(fields: [authorId], references: [id], name: "KudoSent")
+  authorId  String
+  to        User     @relation(fields: [toId], references: [id], name: "KudoReceived")
+  toId      String
+  message   String
+  color     Color?   @default(YELLOW)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Department {
+  HR
+  IT
+  SALES
+  MARKETING
+}
+
+enum Color {
+  RED
+  GREEN
+  BLUE
+  PURPLE
+  YELLOW
+  BROWN
 }

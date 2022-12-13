@@ -1,15 +1,12 @@
 import type { Profile } from '@prisma/client'
-import * as React from 'react'
+import { capitalize } from '../utils/capitalize'
 
 export interface UserAvatarProps {
   profile: Profile
   className?: string
   onClick?: () => void
-}
-
-// capitalize the first letter of a string
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  hideName?: boolean
+  circleClassName?: string
 }
 
 /**
@@ -18,24 +15,36 @@ function capitalize(str: string) {
  * @returns jsx
  */
 export default function UserAvatar(props: UserAvatarProps) {
-  const { profile, className, onClick } = props
+  const {
+    profile,
+    className,
+    circleClassName,
+    onClick,
+    hideName = false,
+  } = props
 
   return (
-    <div className="flex w-auto items-center px-2">
+    <div
+      className={`mx-2 flex w-auto items-center gap-2 rounded-md bg-slate-800 p-2 ${className}`}
+    >
       <div
-        className={`flex h-10 w-10 items-center justify-center  ${className} cursor-pointer rounded-full bg-gray-100`}
+        className={`flex h-7 w-7 ${
+          onClick ? `cursor-pointer` : ``
+        } items-center justify-center rounded-full bg-yellow-100 text-sm text-yellow-700 shadow-lg  ${circleClassName}`}
         onClick={onClick}
       >
-        <h2 className="text-xl font-extrabold text-blue-900">
-          {profile.firstName.charAt(0).toUpperCase()}
-          {profile.lastName.charAt(0).toUpperCase()}
+        <h2 className="font-bold uppercase">
+          {profile.firstName.charAt(0)}
+          {profile.lastName.charAt(0)}
         </h2>
       </div>
-      <header className="flex-1">
-        <h3 className="text-center text-sm font-semibold text-gray-300">
-          {capitalize(profile.firstName)} {capitalize(profile.lastName)}
-        </h3>
-      </header>
+      {!hideName ? (
+        <header className="">
+          <h3 className="text-center text-sm font-semibold text-gray-300">
+            {capitalize(profile.firstName)} {capitalize(profile.lastName)}
+          </h3>
+        </header>
+      ) : null}
     </div>
   )
 }

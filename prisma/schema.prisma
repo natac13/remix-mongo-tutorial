@@ -29,9 +29,9 @@ type Profile {
 model Kudo {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   author    User     @relation(fields: [authorId], references: [id], name: "KudoSent")
-  authorId  String
+  authorId  String   @db.ObjectId
   to        User     @relation(fields: [toId], references: [id], name: "KudoReceived")
-  toId      String
+  toId      String   @db.ObjectId
   message   String
   color     Color?   @default(YELLOW)
   createdAt DateTime @default(now())
